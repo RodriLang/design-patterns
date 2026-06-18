@@ -1,0 +1,74 @@
+package com.example.designpatterns.behavioral.state.states;
+
+import com.example.designpatterns.behavioral.state.exception.InvalidStateTransitionException;
+import com.example.designpatterns.behavioral.state.model.Reservation;
+import com.example.designpatterns.behavioral.state.model.ReservationStatus;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+class CancelledStateTest {
+
+    private final CancelledState state = new CancelledState();
+
+    @Test
+    void confirm_shouldThrowException() {
+        Reservation reservation = Reservation.builder()
+                .status(ReservationStatus.CANCELLED)
+                .build();
+
+        assertThatThrownBy(() -> state.confirm(reservation))
+                .isInstanceOf(InvalidStateTransitionException.class);
+    }
+
+    @Test
+    void occupy_shouldThrowException() {
+        Reservation reservation = Reservation.builder()
+                .status(ReservationStatus.CANCELLED)
+                .build();
+
+        assertThatThrownBy(() -> state.markAsOccupied(reservation))
+                .isInstanceOf(InvalidStateTransitionException.class);
+    }
+
+    @Test
+    void complete_shouldThrowException() {
+        Reservation reservation = Reservation.builder()
+                .status(ReservationStatus.CANCELLED)
+                .build();
+
+        assertThatThrownBy(() -> state.complete(reservation))
+                .isInstanceOf(InvalidStateTransitionException.class);
+    }
+
+    @Test
+    void cancel_shouldThrowException() {
+        Reservation reservation = Reservation.builder()
+                .status(ReservationStatus.CANCELLED)
+                .build();
+
+        assertThatThrownBy(() -> state.cancel(reservation))
+                .isInstanceOf(InvalidStateTransitionException.class);
+    }
+
+    @Test
+    void calculateCancellationPenalty_shouldReturnZero() {
+        assertThat(state.calculateCancellationPenalty())
+                .isEqualByComparingTo(BigDecimal.ZERO);
+    }
+
+    @Test
+    void getStatus_shouldReturnCancelled() {
+        assertThat(state.getStatus())
+                .isEqualTo(ReservationStatus.CANCELLED);
+    }
+
+    @Test
+    void getNotificationMessage_shouldReturnExpectedMessage() {
+        assertThat(state.getNotificationMessage())
+                .isEqualTo("La reserva fue cancelada.");
+    }
+}
